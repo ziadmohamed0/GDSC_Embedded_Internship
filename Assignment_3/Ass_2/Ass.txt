@@ -1,0 +1,7 @@
+*           Ex_1
+*       ------------
+=> output = Error Because this struct is undefined.(Must object).
+
+*           EX2
+*       ------------
+=> (C)  Both of the above. 
