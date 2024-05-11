@@ -20,6 +20,13 @@ static void dummyFile(void);
 static void dummyValues(void);
 
 /*********** Section : Functions Definitions ***********/
+/**
+ * @ brief		: function will take all transaction data and valid data
+ * 				  verifies the account details and the availability of the amount
+ * 				  The database will be updated with the new balance.
+ * @ param_1	: transData
+ * @ Return		: Ret
+ */
 EN_transState_t recieveTransactionData(ST_transaction_t *transData)
 {
 	EN_serverError_t Ret = SERVER_OK;
@@ -49,10 +56,17 @@ EN_transState_t recieveTransactionData(ST_transaction_t *transData)
      else
          updateBalance(accountRefrence, transData->terminalData.transAmount);
 
-
     return Ret ;
 }
 
+/**
+ * @ brief		: This function will take the card data and validate whether
+ * 				  the account associated with this card exists or not Checks whether
+ * 				  PAN exists or not in server database (it searches for PAN card in database).
+ * @ param_1	: cardData
+ * @ param_1	: accountRefrence
+ * @ Return		: Ret
+ */
 EN_serverError_t isValidAccount(ST_CardData_t *cardData, ST_accountsDB_t **accountRefrence)
 {
     for (int i = 0; i < 255; i++){
@@ -67,6 +81,13 @@ EN_serverError_t isValidAccount(ST_CardData_t *cardData, ST_accountsDB_t **accou
 
 }
 
+/**
+ * @ brief		: This function will take the terminal data and verify the validity of this data
+ * 				  Checks whether the transaction amount is available or not.
+ * @ param_1	: cardData
+ * @ param_1	: accountRefrence
+ * @ Return		: Ret
+ */
 EN_serverError_t isAmountAvailable(ST_terminalData_t *termData, ST_accountsDB_t *accountRefrence)
 {
 	EN_serverError_t Ret = SERVER_OK;
@@ -82,13 +103,22 @@ EN_serverError_t isAmountAvailable(ST_terminalData_t *termData, ST_accountsDB_t 
 
 }
 
+/**
+ * @ brief		: This function will store all transaction data in the transaction database
+ * 				  transaction is processed in the server, you must Gives a serial number to the transaction,
+ * 				  and this number increases once the Check the last serial number in the server to give the new
+ * 				  transaction a new serial numberIt saves any type of transaction, whether approved or rejected,
+ * 				  mentioning the specific reason for the rejection/transaction status.
+ * @ param_1	: transData
+ * @ Return		: Ret
+ */
 EN_serverError_t saveTransaction(ST_transaction_t *transData)
 {
     dummyFile();
 
     FILE *transfile;
 
-    transfile = fopen ("output/transactions.txt", "a");
+    transfile = fopen ("/home/ziad/Documents/GDSC_C_Programming_Project/Final_Project/Data_Base/transactions.txt", "a");
      if (transfile == NULL)
      {
          fprintf(stderr, "\nError opened file\n");

@@ -55,20 +55,29 @@ uint8_t	EN_terminalError_tgetTransactionDate(ST_terminalData_t *termData)
 uint8_t	EN_terminalError_tisCardExpired(ST_CardData_t *cardData , ST_terminalData_t *termData)
 {
 	EN_terminalError_t Ret = TERMINAL_OK;
-	uint8_t Length = Zero_Init;
+	int num1;
+	int num2;
 
-	uint8_t	Condition = (cardData->cardExpirationDate[0] >= termData->transactionDate[3]) && (cardData->cardExpirationDate[1] >= termData->transactionDate[4]) && (cardData->cardExpirationDate[3] >= termData->transactionDate[8]) && (cardData->cardExpirationDate[4] >= termData->transactionDate[9]);
+	num1 = ( cardData->cardExpirationDate[3] - '0' ) * 10;
+	num1 += cardData->cardExpirationDate[4] - '0';
 
-	Length = string_length(&(termData->transactionDate));
+	num2 = ( termData->transactionDate[8] - '0' ) * 10;
+	num2 += termData->transactionDate[9] - '0';
 
-	if((Condition == 1))
+	if(num1 < num2)
+		Ret = EXPIRED_CARD;
+	else if(num1 == num2)
 	{
-		Ret = TERMINAL_OK;
+	    num1 = ( cardData->cardExpirationDate[0] - '0' ) * 10;
+	    num1 += cardData->cardExpirationDate[1] - '0';
+
+	    num2 = ( termData->transactionDate[3] - '0' ) * 10;
+	    num2 += termData->transactionDate[4] - '0';
+
+	    if(num1 < num2)
+	    	Ret = EXPIRED_CARD;
 	}
-	else
-	{
-		Ret = WRONG_EXP_DATE;
-	}
+
 	return Ret;
 }
 
